@@ -1,10 +1,20 @@
+// Package wikimediastreams provides functionality to receive notifications about changes
+// on Wikimedia wikis, such as Wikipedia, using Server-Sent Events. See https://wikitech.wikimedia.org/wiki/EventStreams
+//
+// Example usage:
+// 		var stream wikimediastreams.RecentChangesStream
+// 		stream.Run(func(event *wikimediastreams.RecentChangesEvent) {
+// 			fmt.Println(*event)
+// 		}, func(err error) {
+// 			fmt.Println(err)
+// 		})
 package wikimediastreams
 
 import (
 	"fmt"
+	"net/url"
 	"regexp"
 	"strings"
-	"net/url"
 
 	"github.com/r3labs/sse"
 )
@@ -16,20 +26,20 @@ type newOldNumbers struct {
 
 // Metadata represents metadata present in every stream type
 type Metadata struct {
-	Domain string `json:"domain"`
-	DateTime string `json:"dt"`
-	ID string `json:"id"`
+	Domain    string `json:"domain"`
+	DateTime  string `json:"dt"`
+	ID        string `json:"id"`
 	RequestID string `json:"request_id"`
 	SchemaURI string `json:"schema_uri"`
-	Topic string `json:"topic"`
-	URI string `json:"uri"`
+	Topic     string `json:"topic"`
+	URI       string `json:"uri"`
 	Partition uint64 `json:"partition"`
-	Offset uint64 `json:"offset"`
+	Offset    uint64 `json:"offset"`
 }
 
 // Event received
 type Event struct {
-	Meta      Metadata      `json:"meta"`
+	Meta Metadata `json:"meta"`
 }
 
 // Stream is a base for type-specific streams
@@ -43,7 +53,7 @@ type Stream struct {
 
 // UnexpectedSchemaError is returned when a message with an unexpected schema_uri is received
 type UnexpectedSchemaError struct {
-	schema string
+	schema   string
 	expected string
 }
 
