@@ -1,5 +1,5 @@
 // Package wikimediastreams provides functionality to receive notifications about changes
-// on Wikimedia wikis, such as Wikipedia, using Server-Sent Events. See ps://wikitech.wikimedia.org/wiki/EventStreams
+// on Wikimedia wikis, such as Wikipedia, using Server-Sent Events. See https://wikitech.wikimedia.org/wiki/EventStreams
 //
 // Example usage:
 // 	var stream wikimediastreams.RecentChangesStream
