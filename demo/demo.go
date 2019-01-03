@@ -2,14 +2,20 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/MaxSem/wikimediastreams"
 )
 
 func main() {
 	var stream wikimediastreams.RecentChangesStream
-	stream.Run(func(event *wikimediastreams.RecentChangesEvent) {
+
+	err := stream.Run(func(event *wikimediastreams.RecentChangesEvent) {
 		fmt.Println(*event)
 	}, func(err error) {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 	})
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
 }

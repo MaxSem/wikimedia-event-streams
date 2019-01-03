@@ -1,13 +1,34 @@
 // Package wikimediastreams provides functionality to receive notifications about changes
-// on Wikimedia wikis, such as Wikipedia, using Server-Sent Events. See https://wikitech.wikimedia.org/wiki/EventStreams
+// on Wikimedia wikis, such as Wikipedia, using Server-Sent Events. See ps://wikitech.wikimedia.org/wiki/EventStreams
 //
 // Example usage:
-// 		var stream wikimediastreams.RecentChangesStream
-// 		stream.Run(func(event *wikimediastreams.RecentChangesEvent) {
-// 			fmt.Println(*event)
-// 		}, func(err error) {
-// 			fmt.Println(err)
-// 		})
+// 	var stream wikimediastreams.RecentChangesStream
+//
+// 	// Optional configuration
+//
+// 	// By default, you receive events from all wikis. Filter by wiki domain:
+// 	stream.FilterByDomain("en.wikipedia.org")
+// 	// or use a wildcard:
+// 	stream.FilterByDomain("*.wikipedia.org")
+//
+// 	// If you had to reconnect but need to not miss any events, pass the
+// 	// last received event's Meta.DateTime to StartSince():
+// 	stream.StartSince("<last timestamp here>")
+//
+// 	// To connect to some other, non-Wikimedia stream, use SetStreamURL():
+// 	stream.SetStreamURL("https://example.com/stream")
+//
+// 	// End optional configuration
+//
+// 	// Connect to the server and wait for events indefinitely.
+// 	err := stream.Run(func(event *wikimediastreams.RecentChangesEvent) {
+// 		fmt.Println(*event)
+// 	}, func(err error) {
+// 		fmt.Fprintln(os.Stderr, err)
+// 	})
+// 	if err != nil {
+// 		fmt.Fprintln(os.Stderr, err)
+// 	}
 package wikimediastreams
 
 import (
@@ -78,8 +99,8 @@ func (s *Stream) FilterByDomain(filter string) error {
 	return retval
 }
 
-// StartSince configures the stream to start from some time in the past,
-// represented by an ISO 8601 timestamp
+// StartSince configures the stream to start reading events from some time in the past,
+// represented by an ISO 8601 timestamp. Use it to avoid losing data on reconnects.
 func (s *Stream) StartSince(time string) {
 	s.since = "?since=" + url.QueryEscape(time)
 }
